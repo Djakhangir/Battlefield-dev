@@ -1,0 +1,63 @@
+    
+    
+                                    <!--The game view-->
+<div class="section">
+  <div class="container">
+    <div class="content">
+      <h1 class="title">Are ready for the Battle?</h1>
+      <h6 class="subtitle is-6"><strong>Battleship War</strong></h6>
+      <hr>
+
+      <!-- Show when the Player won! -->
+      <section *ngIf="winner" class="notification is-success has-text-centered" style="color:white">
+        <h1>
+          Player {{winner.player.id}} has won the game!
+        </h1>
+        <h5>
+          Click <a href="{{ gameUrl }}">here</a> to start a new game.
+        </h5>
+      </section>
+
+      <div *ngIf="player > 1">
+        <div class="notification is-danger">
+          Sorry, only 2 players can play at a time. You can start your own game by visiting 
+          <a href="{{ gameUrl }}">{{ gameUrl }}</a>
+        </div>
+      </div>
+
+      <!-- show while waiting for the second user -->
+      <div *ngIf="players < 2">
+        <h2>Waiting for the 2nd player...</h2>
+        <h3 class="subtitle is-6"> To invite share this link: {{ gameUrl }}?id={{ gameId }}. You can also open 
+          <a href="{{gameUrl}}?id={{gameId}}" target=" ">this link</a>
+        </h3>
+      </div>
+
+      <!-- Loops throught the boards array and displays the board and player tile -->
+      <div class="columns" *ngIf="validPlayer">
+        <div class="column has-text-centered" *ngFor="let board of boards; let i = index">
+          <h5>
+            PLAYER {{ board.player.id }} <span class="tag is-info" *ngIf="i == player">You</span>
+            <strong>SCORE: {{ board.player.score }}</strong>
+          </h5>
+          <table class="is-bordered" [style.opacity] = "i == player ? 0.5 : 1">
+            <tr *ngFor="let row of board.tiles; let j = index ">
+              <td *ngFor="let col of row; let k = index" (click)="fireTorpedo($event)" [style.background-color] = "col.used ? '' : 'transparent'"
+              [class.win] = "col.status == 'win'" [class.fail] = "col.status !== 'win'" class="battleship-tile" id="t{{i}}{{j}}{{k}}">
+              {{col.value == "X" ? "X" : "`:poop:`" }}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="has-text-centered">
+        <span calss="tag is-warning" *ngIf="canPlay">Your Turn!</span>
+        <span class="tag is-danger" *ngIf="!canPlay">Not your turn, be patient...</span>
+        <h5 class="title"><small>{{ player }} player(s) in game</small></h5>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
